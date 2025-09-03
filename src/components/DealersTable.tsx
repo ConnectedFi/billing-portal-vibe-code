@@ -16,9 +16,10 @@ interface DealersTableProps {
   dateRange?: { from: Date; to: Date };
   dealerFilter: string;
   onDealerFilterChange: (filter: string) => void;
+  onDealerClick?: (dealerName: string) => void;
 }
 
-export const DealersTable = ({ dealers, dateRange, dealerFilter, onDealerFilterChange }: DealersTableProps) => {
+export const DealersTable = ({ dealers, dateRange, dealerFilter, onDealerFilterChange, onDealerClick }: DealersTableProps) => {
   // Dealers are already filtered at the route level
   const filteredDealers = dealers;
 
@@ -69,7 +70,19 @@ export const DealersTable = ({ dealers, dateRange, dealerFilter, onDealerFilterC
             ) : (
               filteredDealers.map((dealer) => (
                 <TableRow key={dealer.dealerName}>
-                  <TableCell className="font-medium">{dealer.dealerName}</TableCell>
+                  <TableCell className="font-medium">
+                    {onDealerClick ? (
+                      <button
+                        type="button"
+                        onClick={() => onDealerClick(dealer.dealerName)}
+                        className="text-primary hover:text-primary/80 hover:underline cursor-pointer font-medium"
+                      >
+                        {dealer.dealerName}
+                      </button>
+                    ) : (
+                      dealer.dealerName
+                    )}
+                  </TableCell>
                   <TableCell className="text-right">{dealer.transactionCount}</TableCell>
                   <TableCell className="text-right">{formatCurrency(dealer.totalAmountDrawn)}</TableCell>
                   <TableCell className="text-right">{formatCurrency(dealer.totalInterestAccrued)}</TableCell>

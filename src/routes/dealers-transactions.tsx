@@ -10,7 +10,7 @@ import {
   filterTransactionsByDateRange,
   mockTransactions 
 } from '../data/mockData';
-import { searchParamsSchema, createDateRange, formatDateForUrl, type SearchParams } from '../lib/searchParams';
+import { type SearchParams, createDateRange, formatDateForUrl, searchParamsSchema } from '../lib/searchParams';
 import type { TransactionType } from '../types';
 
 export const Route = createFileRoute('/dealers-transactions')({
@@ -58,6 +58,15 @@ function DealersTransactionsPage() {
 
   const setTypeFilter = (filter: TransactionType | 'all') => {
     updateSearch({ typeFilter: filter });
+  };
+
+  const handleDealerClick = (dealerName: string) => {
+    updateSearch({ 
+      tab: 'transactions',
+      dealerFilter: dealerName,
+      growerFilter: '',
+      typeFilter: 'all'
+    });
   };
 
   const filteredTransactions = useMemo(() => {
@@ -141,6 +150,7 @@ function DealersTransactionsPage() {
               dateRange={dateRange}
               dealerFilter={dealerFilter}
               onDealerFilterChange={setDealerFilter}
+              onDealerClick={handleDealerClick}
             />
           </CardContent>
         </Card>
