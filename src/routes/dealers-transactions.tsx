@@ -28,6 +28,7 @@ function DealersTransactionsPage() {
   const dealerFilter = search.dealerFilter;
   const growerFilter = search.growerFilter;
   const typeFilter = search.typeFilter;
+  const aggregatesParam = search.aggregates;
 
   // Navigation helpers
   const updateSearch = (updates: Partial<SearchParams>) => {
@@ -65,6 +66,10 @@ function DealersTransactionsPage() {
 
   const setTypeFilter = (filter: TransactionType | 'all') => {
     updateSearch({ typeFilter: filter });
+  };
+
+  const setAggregates = (aggregates: string) => {
+    updateSearch({ aggregates });
   };
 
   const handleDealerClick = (dealerName: string) => {
@@ -141,10 +146,12 @@ function DealersTransactionsPage() {
               dealerFilter={dealerFilter}
               growerFilter={growerFilter}
               typeFilter={typeFilter}
+              aggregatesParam={aggregatesParam}
               onDealerFilterChange={setDealerFilter}
               onGrowerFilterChange={setGrowerFilter}
               onTypeFilterChange={setTypeFilter}
               onClearDateFilter={clearDateRange}
+              onAggregatesChange={setAggregates}
             />
           </CardContent>
         </Card>
@@ -158,9 +165,11 @@ function DealersTransactionsPage() {
               dealers={dealerSummaries} 
               dateRange={dateRange.from || dateRange.to ? dateRange : undefined}
               dealerFilter={dealerFilter}
+              aggregatesParam={aggregatesParam}
               onDealerFilterChange={setDealerFilter}
               onDealerClick={handleDealerClick}
               onClearDateFilter={clearDateRange}
+              onAggregatesChange={setAggregates}
             />
           </CardContent>
         </Card>

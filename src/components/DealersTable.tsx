@@ -2,27 +2,48 @@ import {
   Table,
   TableBody,
   TableCell,
+  TableFooter,
   TableHead,
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
 
+import { type AggregateType, decodeAggregates, encodeAggregates } from '../lib/searchParams';
 import type { DealerSummary } from '../types';
 import { ActiveFilters } from './ActiveFilters';
 import { FilterableTableHead } from './FilterableTableHead';
+import { TableFooterWithAggregates } from './TableFooterWithAggregates';
 
 interface DealersTableProps {
   dealers: DealerSummary[];
   dateRange?: { from?: Date; to?: Date };
   dealerFilter: string;
+  aggregatesParam: string;
   onDealerFilterChange: (filter: string) => void;
   onDealerClick?: (dealerName: string) => void;
   onClearDateFilter?: () => void;
+  onAggregatesChange: (aggregates: string) => void;
 }
 
-export const DealersTable = ({ dealers, dateRange, dealerFilter, onDealerFilterChange, onDealerClick, onClearDateFilter }: DealersTableProps) => {
+export const DealersTable = ({ dealers, dateRange, dealerFilter, aggregatesParam, onDealerFilterChange, onDealerClick, onClearDateFilter, onAggregatesChange }: DealersTableProps) => {
   // Dealers are already filtered at the route level
   const filteredDealers = dealers;
+  
+  // Decode current aggregates from URL
+  const activeAggregates = decodeAggregates(aggregatesParam);
+  
+  // Handle aggregate changes
+  const handleAggregateChange = (columnId: string, aggregateType: AggregateType | null) => {
+    const newAggregates = { ...activeAggregates };
+    
+    if (aggregateType) {
+      newAggregates[columnId] = aggregateType;
+    } else {
+      delete newAggregates[columnId];
+    }
+    
+    onAggregatesChange(encodeAggregates(newAggregates));
+  };
 
   const formatCurrency = (amount: number) => {
     return new Intl.NumberFormat('en-US', {
@@ -30,6 +51,52 @@ export const DealersTable = ({ dealers, dateRange, dealerFilter, onDealerFilterC
       currency: 'USD'
     }).format(amount);
   };
+
+  // Configure numeric columns with meaningful IDs
+  const numericColumns = [
+    {
+      id: 'transactionCount',
+      index: 1,
+      label: 'Transaction Count',
+      data: filteredDealers.map(d => d.transactionCount),
+      formatValue: (v: number) => v.toString()
+    },
+    {
+      id: 'totalAmountDrawn',
+      index: 2,
+      label: 'Total Amount Drawn',
+      data: filteredDealers.map(d => d.totalAmountDrawn),
+      formatValue: formatCurrency
+    },
+    {
+      id: 'totalInterestAccrued',
+      index: 3,
+      label: 'Total Interest Accrued',
+      data: filteredDealers.map(d => d.totalInterestAccrued),
+      formatValue: formatCurrency
+    },
+    {
+      id: 'totalCfiMargin',
+      index: 4,
+      label: 'Total CFI Margin',
+      data: filteredDealers.map(d => d.totalCfiMargin),
+      formatValue: formatCurrency
+    },
+    {
+      id: 'receivableFromCFA',
+      index: 5,
+      label: 'Receivable from CFA',
+      data: filteredDealers.map(d => d.receivableFromCFA),
+      formatValue: formatCurrency
+    },
+    {
+      id: 'payableToCFA',
+      index: 6,
+      label: 'Payable to CFA',
+      data: filteredDealers.map(d => d.payableToCFA),
+      formatValue: formatCurrency
+    }
+  ];
 
 
 
@@ -87,9 +154,17 @@ export const DealersTable = ({ dealers, dateRange, dealerFilter, onDealerFilterC
                 </TableRow>
               ))
             )}
-          </TableBody>
-        </Table>
-      </div>
+                     </TableBody>
+           <TableFooter>
+             <TableFooterWithAggregates
+               columns={numericColumns}
+               totalColumns={7}
+               activeAggregates={activeAggregates}
+               onAggregateChange={handleAggregateChange}
+             />
+           </TableFooter>
+         </Table>
+       </div>
       
       <div className="text-sm text-muted-foreground">
         Showing {filteredDealers.length} of {dealers.length} dealers

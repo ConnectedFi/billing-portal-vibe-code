@@ -3,14 +3,17 @@ import {
   Table,
   TableBody,
   TableCell,
+  TableFooter,
   TableHead,
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
 
+import { type AggregateType, decodeAggregates, encodeAggregates } from '../lib/searchParams';
 import type { Transaction, TransactionType } from '../types';
 import { ActiveFilters } from './ActiveFilters';
 import { FilterableTableHead } from './FilterableTableHead';
+import { TableFooterWithAggregates } from './TableFooterWithAggregates';
 
 interface TransactionsTableProps {
   transactions: Transaction[];
@@ -18,10 +21,12 @@ interface TransactionsTableProps {
   dealerFilter: string;
   growerFilter: string;
   typeFilter: TransactionType | 'all';
+  aggregatesParam: string;
   onDealerFilterChange: (filter: string) => void;
   onGrowerFilterChange: (filter: string) => void;
   onTypeFilterChange: (filter: TransactionType | 'all') => void;
   onClearDateFilter?: () => void;
+  onAggregatesChange: (aggregates: string) => void;
 }
 
 export const TransactionsTable = ({ 
@@ -30,13 +35,31 @@ export const TransactionsTable = ({
   dealerFilter, 
   growerFilter, 
   typeFilter,
+  aggregatesParam,
   onDealerFilterChange,
   onGrowerFilterChange,
   onTypeFilterChange,
-  onClearDateFilter
+  onClearDateFilter,
+  onAggregatesChange
 }: TransactionsTableProps) => {
   // Transactions are already filtered at the route level
   const filteredTransactions = transactions;
+  
+  // Decode current aggregates from URL
+  const activeAggregates = decodeAggregates(aggregatesParam);
+  
+  // Handle aggregate changes
+  const handleAggregateChange = (columnId: string, aggregateType: AggregateType | null) => {
+    const newAggregates = { ...activeAggregates };
+    
+    if (aggregateType) {
+      newAggregates[columnId] = aggregateType;
+    } else {
+      delete newAggregates[columnId];
+    }
+    
+    onAggregatesChange(encodeAggregates(newAggregates));
+  };
 
   const formatCurrency = (amount: number) => {
     return new Intl.NumberFormat('en-US', {
@@ -72,6 +95,31 @@ export const TransactionsTable = ({
     { value: 'product-return', label: 'Product Return' },
     { value: 'principal-payment', label: 'Principal Payment' },
     { value: 'principal-and-interest-payment', label: 'Principal & Interest Payment' }
+  ];
+
+  // Configure numeric columns with meaningful IDs
+  const numericColumns = [
+    {
+      id: 'amountDrawn',
+      index: 4,
+      label: 'Amount Drawn',
+      data: filteredTransactions.map(t => t.amountDrawn),
+      formatValue: formatCurrency
+    },
+    {
+      id: 'interestAccrued',
+      index: 5,
+      label: 'Interest Accrued',
+      data: filteredTransactions.map(t => t.interestAccrued),
+      formatValue: formatCurrency
+    },
+    {
+      id: 'cfiMargin',
+      index: 6,
+      label: 'CFI Margin',
+      data: filteredTransactions.map(t => t.cfiMargin),
+      formatValue: formatCurrency
+    }
   ];
 
   return (
@@ -131,9 +179,17 @@ export const TransactionsTable = ({
                 </TableRow>
               ))
             )}
-          </TableBody>
-        </Table>
-      </div>
+                     </TableBody>
+           <TableFooter>
+             <TableFooterWithAggregates
+               columns={numericColumns}
+               totalColumns={7}
+               activeAggregates={activeAggregates}
+               onAggregateChange={handleAggregateChange}
+             />
+           </TableFooter>
+         </Table>
+       </div>
       
       <div className="text-sm text-muted-foreground">
         Showing {filteredTransactions.length} of {transactions.length} transactions
