@@ -24,6 +24,13 @@ function DealersTransactionsPage() {
     to: new Date('2024-12-31')
   });
 
+  const handleClearDateFilter = () => {
+    setDateRange({
+      from: new Date('2024-01-01'),
+      to: new Date('2024-12-31')
+    });
+  };
+
   const filteredTransactions = useMemo(() => {
     return filterTransactionsByDateRange(mockTransactions, dateRange);
   }, [dateRange]);
@@ -64,7 +71,10 @@ function DealersTransactionsPage() {
             <CardTitle>Individual Transactions</CardTitle>
           </CardHeader>
           <CardContent>
-            <TransactionsTable transactions={filteredTransactions} />
+            <TransactionsTable 
+              transactions={filteredTransactions} 
+              dateRange={dateRange}
+            />
           </CardContent>
         </Card>
       ) : (
@@ -73,7 +83,10 @@ function DealersTransactionsPage() {
             <CardTitle>Dealer Summaries</CardTitle>
           </CardHeader>
           <CardContent>
-            <DealersTable dealers={dealerSummaries} />
+            <DealersTable 
+              dealers={dealerSummaries} 
+              dateRange={dateRange}
+            />
           </CardContent>
         </Card>
       )}

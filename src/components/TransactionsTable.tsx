@@ -11,12 +11,14 @@ import {
 } from '@/components/ui/table';
 import { useMemo, useState } from 'react';
 import type { Transaction, TransactionType } from '../types';
+import { ActiveFilters } from './ActiveFilters';
 
 interface TransactionsTableProps {
   transactions: Transaction[];
+  dateRange?: { from: Date; to: Date };
 }
 
-export const TransactionsTable = ({ transactions }: TransactionsTableProps) => {
+export const TransactionsTable = ({ transactions, dateRange }: TransactionsTableProps) => {
   const [dealerFilter, setDealerFilter] = useState('');
   const [growerFilter, setGrowerFilter] = useState('');
   const [typeFilter, setTypeFilter] = useState<TransactionType | 'all'>('all');
@@ -130,6 +132,21 @@ export const TransactionsTable = ({ transactions }: TransactionsTableProps) => {
       <div className="text-sm text-muted-foreground">
         Showing {filteredTransactions.length} of {transactions.length} transactions
       </div>
+
+      <ActiveFilters
+        dealerFilter={dealerFilter}
+        growerFilter={growerFilter}
+        typeFilter={typeFilter}
+        dateRange={dateRange}
+        onClearDealerFilter={() => setDealerFilter('')}
+        onClearGrowerFilter={() => setGrowerFilter('')}
+        onClearTypeFilter={() => setTypeFilter('all')}
+        onClearAllFilters={() => {
+          setDealerFilter('');
+          setGrowerFilter('');
+          setTypeFilter('all');
+        }}
+      />
     </div>
   );
 };

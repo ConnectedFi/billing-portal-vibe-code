@@ -9,12 +9,14 @@ import {
 } from '@/components/ui/table';
 import { useMemo, useState } from 'react';
 import type { DealerSummary } from '../types';
+import { ActiveFilters } from './ActiveFilters';
 
 interface DealersTableProps {
   dealers: DealerSummary[];
+  dateRange?: { from: Date; to: Date };
 }
 
-export const DealersTable = ({ dealers }: DealersTableProps) => {
+export const DealersTable = ({ dealers, dateRange }: DealersTableProps) => {
   const [dealerFilter, setDealerFilter] = useState('');
 
   const filteredDealers = useMemo(() => {
@@ -92,6 +94,15 @@ export const DealersTable = ({ dealers }: DealersTableProps) => {
       <div className="text-sm text-muted-foreground">
         Showing {filteredDealers.length} of {dealers.length} dealers
       </div>
+
+      <ActiveFilters
+        dealerFilter={dealerFilter}
+        dateRange={dateRange}
+        onClearDealerFilter={() => setDealerFilter('')}
+        onClearAllFilters={() => {
+          setDealerFilter('');
+        }}
+      />
     </div>
   );
 };
