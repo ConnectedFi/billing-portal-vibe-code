@@ -116,10 +116,10 @@ export const ActiveFilters = ({
           <Button
             variant="ghost"
             size="sm"
-            className="h-3 w-3 p-0 hover:bg-destructive hover:text-destructive-foreground"
+            className="h-4 w-4 p-0 ml-1 rounded-full hover:bg-destructive/20 hover:text-destructive transition-all duration-200"
             onClick={filter.onRemove}
           >
-            <X className="h-2 w-2" />
+            <X className="h-3 w-3" />
           </Button>
         </Badge>
       ))}
