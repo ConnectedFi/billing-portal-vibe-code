@@ -55,14 +55,14 @@ export const DealersTable = ({ dealers }: DealersTableProps) => {
       <div className="rounded-md border">
         <Table>
           <TableHeader>
-            <TableRow>
-              <TableHead>Dealer Name</TableHead>
-              <TableHead className="text-right">Transaction Count</TableHead>
-              <TableHead className="text-right">Total Amount Drawn</TableHead>
-              <TableHead className="text-right">Total Interest Accrued</TableHead>
-              <TableHead className="text-right">Total CFI Margin</TableHead>
-              <TableHead>First Transaction</TableHead>
-              <TableHead>Last Transaction</TableHead>
+            <TableRow className="bg-muted/50 hover:bg-muted/50">
+              <TableHead className="font-semibold text-foreground">Dealer Name</TableHead>
+              <TableHead className="text-right font-semibold text-foreground">Transaction Count</TableHead>
+              <TableHead className="text-right font-semibold text-foreground">Total Amount Drawn</TableHead>
+              <TableHead className="text-right font-semibold text-foreground">Total Interest Accrued</TableHead>
+              <TableHead className="text-right font-semibold text-foreground">Total CFI Margin</TableHead>
+              <TableHead className="font-semibold text-foreground">First Transaction</TableHead>
+              <TableHead className="font-semibold text-foreground">Last Transaction</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>

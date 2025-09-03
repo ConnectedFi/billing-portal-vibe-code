@@ -93,14 +93,14 @@ export const TransactionsTable = ({ transactions }: TransactionsTableProps) => {
       <div className="rounded-md border">
         <Table>
           <TableHeader>
-            <TableRow>
-              <TableHead>Dealer Name</TableHead>
-              <TableHead>Grower Name</TableHead>
-              <TableHead>Posted Date</TableHead>
-              <TableHead>Transaction Type</TableHead>
-              <TableHead className="text-right">Amount Drawn</TableHead>
-              <TableHead className="text-right">Interest Accrued</TableHead>
-              <TableHead className="text-right">CFI Margin</TableHead>
+            <TableRow className="bg-muted/50 hover:bg-muted/50">
+              <TableHead className="font-semibold text-foreground">Dealer Name</TableHead>
+              <TableHead className="font-semibold text-foreground">Grower Name</TableHead>
+              <TableHead className="font-semibold text-foreground">Posted Date</TableHead>
+              <TableHead className="font-semibold text-foreground">Transaction Type</TableHead>
+              <TableHead className="text-right font-semibold text-foreground">Amount Drawn</TableHead>
+              <TableHead className="text-right font-semibold text-foreground">Interest Accrued</TableHead>
+              <TableHead className="text-right font-semibold text-foreground">CFI Margin</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>

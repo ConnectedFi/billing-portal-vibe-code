@@ -19,7 +19,10 @@ export const Route = createFileRoute('/dealers-transactions')({
 
 function DealersTransactionsPage() {
   const [activeTab, setActiveTab] = useState<'transactions' | 'dealers'>('transactions');
-  const [dateRange, setDateRange] = useState<DateRange>(getLastMonthRange());
+  const [dateRange, setDateRange] = useState<DateRange>({
+    from: new Date('2024-01-01'),
+    to: new Date('2024-12-31')
+  });
 
   const filteredTransactions = useMemo(() => {
     return filterTransactionsByDateRange(mockTransactions, dateRange);
