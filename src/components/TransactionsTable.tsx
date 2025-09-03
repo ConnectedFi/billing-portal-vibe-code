@@ -7,7 +7,7 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
-import { useMemo, useState } from 'react';
+import { useMemo } from 'react';
 import type { Transaction, TransactionType } from '../types';
 import { ActiveFilters } from './ActiveFilters';
 import { FilterableTableHead } from './FilterableTableHead';
@@ -15,24 +15,26 @@ import { FilterableTableHead } from './FilterableTableHead';
 interface TransactionsTableProps {
   transactions: Transaction[];
   dateRange?: { from: Date; to: Date };
+  dealerFilter: string;
+  growerFilter: string;
+  typeFilter: TransactionType | 'all';
+  onDealerFilterChange: (filter: string) => void;
+  onGrowerFilterChange: (filter: string) => void;
+  onTypeFilterChange: (filter: TransactionType | 'all') => void;
 }
 
-export const TransactionsTable = ({ transactions, dateRange }: TransactionsTableProps) => {
-  const [dealerFilter, setDealerFilter] = useState('');
-  const [growerFilter, setGrowerFilter] = useState('');
-  const [typeFilter, setTypeFilter] = useState<TransactionType | 'all'>('all');
-
-  const filteredTransactions = useMemo(() => {
-    return transactions.filter(transaction => {
-      const matchesDealer = dealerFilter === '' || 
-        transaction.dealerName.toLowerCase().includes(dealerFilter.toLowerCase());
-      const matchesGrower = growerFilter === '' || 
-        transaction.growerName.toLowerCase().includes(growerFilter.toLowerCase());
-      const matchesType = typeFilter === 'all' || transaction.transactionType === typeFilter;
-      
-      return matchesDealer && matchesGrower && matchesType;
-    });
-  }, [transactions, dealerFilter, growerFilter, typeFilter]);
+export const TransactionsTable = ({ 
+  transactions, 
+  dateRange, 
+  dealerFilter, 
+  growerFilter, 
+  typeFilter,
+  onDealerFilterChange,
+  onGrowerFilterChange,
+  onTypeFilterChange
+}: TransactionsTableProps) => {
+  // Transactions are already filtered at the route level
+  const filteredTransactions = transactions;
 
   const formatCurrency = (amount: number) => {
     return new Intl.NumberFormat('en-US', {
@@ -79,7 +81,7 @@ export const TransactionsTable = ({ transactions, dateRange }: TransactionsTable
               <FilterableTableHead
                 filterType="text"
                 filterValue={dealerFilter}
-                onFilterChange={setDealerFilter}
+                onFilterChange={onDealerFilterChange}
                 placeholder="Filter dealers..."
               >
                 Dealer Name
@@ -87,7 +89,7 @@ export const TransactionsTable = ({ transactions, dateRange }: TransactionsTable
               <FilterableTableHead
                 filterType="text"
                 filterValue={growerFilter}
-                onFilterChange={setGrowerFilter}
+                onFilterChange={onGrowerFilterChange}
                 placeholder="Filter growers..."
               >
                 Grower Name
@@ -96,7 +98,7 @@ export const TransactionsTable = ({ transactions, dateRange }: TransactionsTable
               <FilterableTableHead
                 filterType="select"
                 filterValue={typeFilter}
-                onFilterChange={(value: string) => setTypeFilter(value as TransactionType | 'all')}
+                onFilterChange={(value: string) => onTypeFilterChange(value as TransactionType | 'all')}
                 selectOptions={transactionTypeOptions}
                 placeholder="Filter types..."
               >
@@ -140,13 +142,13 @@ export const TransactionsTable = ({ transactions, dateRange }: TransactionsTable
         growerFilter={growerFilter}
         typeFilter={typeFilter}
         dateRange={dateRange}
-        onClearDealerFilter={() => setDealerFilter('')}
-        onClearGrowerFilter={() => setGrowerFilter('')}
-        onClearTypeFilter={() => setTypeFilter('all')}
+        onClearDealerFilter={() => onDealerFilterChange('')}
+        onClearGrowerFilter={() => onGrowerFilterChange('')}
+        onClearTypeFilter={() => onTypeFilterChange('all')}
         onClearAllFilters={() => {
-          setDealerFilter('');
-          setGrowerFilter('');
-          setTypeFilter('all');
+          onDealerFilterChange('');
+          onGrowerFilterChange('');
+          onTypeFilterChange('all');
         }}
       />
     </div>

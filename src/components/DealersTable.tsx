@@ -6,7 +6,7 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
-import { useMemo, useState } from 'react';
+import { useMemo } from 'react';
 import type { DealerSummary } from '../types';
 import { ActiveFilters } from './ActiveFilters';
 import { FilterableTableHead } from './FilterableTableHead';
@@ -14,19 +14,13 @@ import { FilterableTableHead } from './FilterableTableHead';
 interface DealersTableProps {
   dealers: DealerSummary[];
   dateRange?: { from: Date; to: Date };
+  dealerFilter: string;
+  onDealerFilterChange: (filter: string) => void;
 }
 
-export const DealersTable = ({ dealers, dateRange }: DealersTableProps) => {
-  const [dealerFilter, setDealerFilter] = useState('');
-
-  const filteredDealers = useMemo(() => {
-    return dealers.filter(dealer => {
-      const matchesDealer = dealerFilter === '' || 
-        dealer.dealerName.toLowerCase().includes(dealerFilter.toLowerCase());
-      
-      return matchesDealer;
-    });
-  }, [dealers, dealerFilter]);
+export const DealersTable = ({ dealers, dateRange, dealerFilter, onDealerFilterChange }: DealersTableProps) => {
+  // Dealers are already filtered at the route level
+  const filteredDealers = dealers;
 
   const formatCurrency = (amount: number) => {
     return new Intl.NumberFormat('en-US', {
@@ -52,7 +46,7 @@ export const DealersTable = ({ dealers, dateRange }: DealersTableProps) => {
               <FilterableTableHead
                 filterType="text"
                 filterValue={dealerFilter}
-                onFilterChange={setDealerFilter}
+                onFilterChange={onDealerFilterChange}
                 placeholder="Filter dealers..."
               >
                 Dealer Name
@@ -96,9 +90,9 @@ export const DealersTable = ({ dealers, dateRange }: DealersTableProps) => {
       <ActiveFilters
         dealerFilter={dealerFilter}
         dateRange={dateRange}
-        onClearDealerFilter={() => setDealerFilter('')}
+        onClearDealerFilter={() => onDealerFilterChange('')}
         onClearAllFilters={() => {
-          setDealerFilter('');
+          onDealerFilterChange('');
         }}
       />
     </div>
