@@ -81,7 +81,6 @@ export const ActiveFilters = ({
       }).format(date);
     };
 
-    const today = new Date();
     const isDefaultRange = dateRange.from.getFullYear() === 2024 && 
                           dateRange.to.getFullYear() === 2024 &&
                           dateRange.from.getMonth() === 0 && 

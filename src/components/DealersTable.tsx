@@ -6,7 +6,7 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
-import { useMemo } from 'react';
+
 import type { DealerSummary } from '../types';
 import { ActiveFilters } from './ActiveFilters';
 import { FilterableTableHead } from './FilterableTableHead';
@@ -30,13 +30,7 @@ export const DealersTable = ({ dealers, dateRange, dealerFilter, onDealerFilterC
     }).format(amount);
   };
 
-  const formatDate = (date: Date) => {
-    return new Intl.DateTimeFormat('en-US', {
-      year: 'numeric',
-      month: 'short',
-      day: 'numeric'
-    }).format(date);
-  };
+
 
   return (
     <div className="space-y-4">

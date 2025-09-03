@@ -7,7 +7,7 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
-import { useMemo } from 'react';
+
 import type { Transaction, TransactionType } from '../types';
 import { ActiveFilters } from './ActiveFilters';
 import { FilterableTableHead } from './FilterableTableHead';
