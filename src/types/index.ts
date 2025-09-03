@@ -20,8 +20,8 @@ export interface DealerSummary {
   totalAmountDrawn: number;
   totalInterestAccrued: number;
   totalCfiMargin: number;
-  firstTransactionDate: Date;
-  lastTransactionDate: Date;
+  receivableFromCFA: number;
+  payableToCFA: number;
 }
 
 export interface DateRange {

@@ -91,19 +91,27 @@ export const aggregateTransactionsByDealer = (transactions: Transaction[]): Deal
   for (const transaction of transactions) {
     const existing = dealerMap.get(transaction.dealerName);
     
+    // Calculate receivable/payable based on transaction type
+    // For simplicity, let's assume:
+    // - Product returns create receivables from CFA (CFA owes dealer)
+    // - Principal payments create payables to CFA (dealer owes CFA)
+    // - Principal+interest payments are neutral for this calculation
+    let receivableFromCFA = 0;
+    let payableToCFA = 0;
+    
+    if (transaction.transactionType === 'product-return') {
+      receivableFromCFA = transaction.amountDrawn;
+    } else if (transaction.transactionType === 'principal-payment') {
+      payableToCFA = transaction.amountDrawn;
+    }
+    
     if (existing) {
       existing.transactionCount += 1;
       existing.totalAmountDrawn += transaction.amountDrawn;
       existing.totalInterestAccrued += transaction.interestAccrued;
       existing.totalCfiMargin += transaction.cfiMargin;
-      existing.firstTransactionDate = new Date(Math.min(
-        existing.firstTransactionDate.getTime(),
-        transaction.postedAt.getTime()
-      ));
-      existing.lastTransactionDate = new Date(Math.max(
-        existing.lastTransactionDate.getTime(),
-        transaction.postedAt.getTime()
-      ));
+      existing.receivableFromCFA += receivableFromCFA;
+      existing.payableToCFA += payableToCFA;
     } else {
       dealerMap.set(transaction.dealerName, {
         dealerName: transaction.dealerName,
@@ -111,8 +119,8 @@ export const aggregateTransactionsByDealer = (transactions: Transaction[]): Deal
         totalAmountDrawn: transaction.amountDrawn,
         totalInterestAccrued: transaction.interestAccrued,
         totalCfiMargin: transaction.cfiMargin,
-        firstTransactionDate: new Date(transaction.postedAt),
-        lastTransactionDate: new Date(transaction.postedAt)
+        receivableFromCFA,
+        payableToCFA
       });
     }
   }

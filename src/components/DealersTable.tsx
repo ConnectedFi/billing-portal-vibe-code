@@ -56,8 +56,8 @@ export const DealersTable = ({ dealers, dateRange, dealerFilter, onDealerFilterC
               <TableHead className="text-right font-semibold text-foreground">Total Amount Drawn</TableHead>
               <TableHead className="text-right font-semibold text-foreground">Total Interest Accrued</TableHead>
               <TableHead className="text-right font-semibold text-foreground">Total CFI Margin</TableHead>
-              <TableHead className="font-semibold text-foreground">First Transaction</TableHead>
-              <TableHead className="font-semibold text-foreground">Last Transaction</TableHead>
+              <TableHead className="text-right font-semibold text-foreground">Receivable from CFA</TableHead>
+              <TableHead className="text-right font-semibold text-foreground">Payable to CFA</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -87,8 +87,8 @@ export const DealersTable = ({ dealers, dateRange, dealerFilter, onDealerFilterC
                   <TableCell className="text-right">{formatCurrency(dealer.totalAmountDrawn)}</TableCell>
                   <TableCell className="text-right">{formatCurrency(dealer.totalInterestAccrued)}</TableCell>
                   <TableCell className="text-right">{formatCurrency(dealer.totalCfiMargin)}</TableCell>
-                  <TableCell>{formatDate(dealer.firstTransactionDate)}</TableCell>
-                  <TableCell>{formatDate(dealer.lastTransactionDate)}</TableCell>
+                  <TableCell className="text-right">{formatCurrency(dealer.receivableFromCFA)}</TableCell>
+                  <TableCell className="text-right">{formatCurrency(dealer.payableToCFA)}</TableCell>
                 </TableRow>
               ))
             )}
