@@ -14,13 +14,14 @@ import { FilterableTableHead } from './FilterableTableHead';
 
 interface TransactionsTableProps {
   transactions: Transaction[];
-  dateRange?: { from: Date; to: Date };
+  dateRange?: { from?: Date; to?: Date };
   dealerFilter: string;
   growerFilter: string;
   typeFilter: TransactionType | 'all';
   onDealerFilterChange: (filter: string) => void;
   onGrowerFilterChange: (filter: string) => void;
   onTypeFilterChange: (filter: TransactionType | 'all') => void;
+  onClearDateFilter?: () => void;
 }
 
 export const TransactionsTable = ({ 
@@ -31,7 +32,8 @@ export const TransactionsTable = ({
   typeFilter,
   onDealerFilterChange,
   onGrowerFilterChange,
-  onTypeFilterChange
+  onTypeFilterChange,
+  onClearDateFilter
 }: TransactionsTableProps) => {
   // Transactions are already filtered at the route level
   const filteredTransactions = transactions;
@@ -145,10 +147,12 @@ export const TransactionsTable = ({
         onClearDealerFilter={() => onDealerFilterChange('')}
         onClearGrowerFilter={() => onGrowerFilterChange('')}
         onClearTypeFilter={() => onTypeFilterChange('all')}
+        onClearDateFilter={onClearDateFilter}
         onClearAllFilters={() => {
           onDealerFilterChange('');
           onGrowerFilterChange('');
           onTypeFilterChange('all');
+          onClearDateFilter?.();
         }}
       />
     </div>

@@ -13,13 +13,14 @@ import { FilterableTableHead } from './FilterableTableHead';
 
 interface DealersTableProps {
   dealers: DealerSummary[];
-  dateRange?: { from: Date; to: Date };
+  dateRange?: { from?: Date; to?: Date };
   dealerFilter: string;
   onDealerFilterChange: (filter: string) => void;
   onDealerClick?: (dealerName: string) => void;
+  onClearDateFilter?: () => void;
 }
 
-export const DealersTable = ({ dealers, dateRange, dealerFilter, onDealerFilterChange, onDealerClick }: DealersTableProps) => {
+export const DealersTable = ({ dealers, dateRange, dealerFilter, onDealerFilterChange, onDealerClick, onClearDateFilter }: DealersTableProps) => {
   // Dealers are already filtered at the route level
   const filteredDealers = dealers;
 
@@ -98,8 +99,10 @@ export const DealersTable = ({ dealers, dateRange, dealerFilter, onDealerFilterC
         dealerFilter={dealerFilter}
         dateRange={dateRange}
         onClearDealerFilter={() => onDealerFilterChange('')}
+        onClearDateFilter={onClearDateFilter}
         onClearAllFilters={() => {
           onDealerFilterChange('');
+          onClearDateFilter?.();
         }}
       />
     </div>

@@ -14,14 +14,20 @@ interface DateRangeSelectorProps {
 }
 
 export const DateRangeSelector = ({ dateRange, onDateRangeChange, onClearDateRange }: DateRangeSelectorProps) => {
-  const [preset, setPreset] = useState<DatePreset>('custom');
+  const [preset, setPreset] = useState<DatePreset>(() => {
+    // Determine initial preset based on current date range
+    if (!dateRange.from && !dateRange.to) return 'none';
+    return 'custom';
+  });
   const [fromOpen, setFromOpen] = useState(false);
   const [toOpen, setToOpen] = useState(false);
 
   const handlePresetChange = (newPreset: DatePreset) => {
     setPreset(newPreset);
     
-    if (newPreset === 'last-week') {
+    if (newPreset === 'none') {
+      onClearDateRange?.();
+    } else if (newPreset === 'last-week') {
       onDateRangeChange(getLastWeekRange());
     } else if (newPreset === 'last-month') {
       onDateRangeChange(getLastMonthRange());
@@ -41,7 +47,7 @@ export const DateRangeSelector = ({ dateRange, onDateRangeChange, onClearDateRan
   };
 
   const formatDate = (date?: Date) => {
-    if (!date) return 'Select date';
+    if (!date) return '--';
     return new Intl.DateTimeFormat('en-US', {
       month: 'short',
       day: 'numeric',
@@ -60,6 +66,7 @@ export const DateRangeSelector = ({ dateRange, onDateRangeChange, onClearDateRan
           <SelectValue placeholder="Select" />
         </SelectTrigger>
         <SelectContent>
+          <SelectItem value="none">None</SelectItem>
           <SelectItem value="last-week">Last Week</SelectItem>
           <SelectItem value="last-month">Last Month</SelectItem>
           <SelectItem value="custom">Custom</SelectItem>
@@ -71,7 +78,9 @@ export const DateRangeSelector = ({ dateRange, onDateRangeChange, onClearDateRan
           <PopoverTrigger asChild>
             <Button
               variant="outline"
-              className="w-[180px] h-8 justify-start text-left font-normal text-sm"
+              className={`w-[180px] h-8 justify-start text-left font-normal text-sm ${
+                !dateRange.from ? 'text-muted-foreground' : ''
+              }`}
             >
               <CalendarIcon className="mr-2 h-4 w-4" />
               {formatDate(dateRange.from)}
@@ -93,7 +102,9 @@ export const DateRangeSelector = ({ dateRange, onDateRangeChange, onClearDateRan
           <PopoverTrigger asChild>
             <Button
               variant="outline"
-              className="w-[180px] h-8 justify-start text-left font-normal text-sm"
+              className={`w-[180px] h-8 justify-start text-left font-normal text-sm ${
+                !dateRange.to ? 'text-muted-foreground' : ''
+              }`}
             >
               <CalendarIcon className="mr-2 h-4 w-4" />
               {formatDate(dateRange.to)}

@@ -144,6 +144,7 @@ function DealersTransactionsPage() {
               onDealerFilterChange={setDealerFilter}
               onGrowerFilterChange={setGrowerFilter}
               onTypeFilterChange={setTypeFilter}
+              onClearDateFilter={clearDateRange}
             />
           </CardContent>
         </Card>
@@ -159,6 +160,7 @@ function DealersTransactionsPage() {
               dealerFilter={dealerFilter}
               onDealerFilterChange={setDealerFilter}
               onDealerClick={handleDealerClick}
+              onClearDateFilter={clearDateRange}
             />
           </CardContent>
         </Card>
