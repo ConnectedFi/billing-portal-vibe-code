@@ -143,6 +143,13 @@ export const getLastMonthRange = (): { from: Date; to: Date } => {
   return { from, to };
 };
 
+export const getLastYearRange = (): { from: Date; to: Date } => {
+  const to = new Date();
+  const from = new Date();
+  from.setFullYear(from.getFullYear() - 1);
+  return { from, to };
+};
+
 export const filterTransactionsByDateRange = (
   transactions: Transaction[],
   dateRange: { from?: Date; to?: Date }

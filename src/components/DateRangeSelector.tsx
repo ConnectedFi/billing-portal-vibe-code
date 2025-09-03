@@ -4,7 +4,7 @@ import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { CalendarIcon, X } from 'lucide-react';
 import { useState } from 'react';
-import { getLastMonthRange, getLastWeekRange } from '../data/mockData';
+import { getLastMonthRange, getLastWeekRange, getLastYearRange } from '../data/mockData';
 import type { DatePreset, DateRange } from '../types';
 
 interface DateRangeSelectorProps {
@@ -31,6 +31,8 @@ export const DateRangeSelector = ({ dateRange, onDateRangeChange, onClearDateRan
       onDateRangeChange(getLastWeekRange());
     } else if (newPreset === 'last-month') {
       onDateRangeChange(getLastMonthRange());
+    } else if (newPreset === 'last-year') {
+      onDateRangeChange(getLastYearRange());
     }
   };
 
@@ -69,6 +71,7 @@ export const DateRangeSelector = ({ dateRange, onDateRangeChange, onClearDateRan
           <SelectItem value="none">None</SelectItem>
           <SelectItem value="last-week">Last Week</SelectItem>
           <SelectItem value="last-month">Last Month</SelectItem>
+          <SelectItem value="last-year">Last Year</SelectItem>
           <SelectItem value="custom">Custom</SelectItem>
         </SelectContent>
       </Select>

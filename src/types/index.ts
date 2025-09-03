@@ -29,4 +29,4 @@ export interface DateRange {
   to?: Date;
 }
 
-export type DatePreset = 'none' | 'last-week' | 'last-month' | 'custom';
+export type DatePreset = 'none' | 'last-week' | 'last-month' | 'last-year' | 'custom';
