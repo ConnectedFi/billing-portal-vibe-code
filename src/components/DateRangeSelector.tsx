@@ -47,47 +47,35 @@ export const DateRangeSelector = ({ dateRange, onDateRangeChange }: DateRangeSel
   };
 
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle>Date Range Filter</CardTitle>
-      </CardHeader>
-      <CardContent className="space-y-4">
-        <div className="flex gap-4 flex-wrap items-center">
-          <Select value={preset} onValueChange={handlePresetChange}>
-            <SelectTrigger className="w-[180px]">
-              <SelectValue placeholder="Select preset" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="last-week">Last Week</SelectItem>
-              <SelectItem value="last-month">Last Month</SelectItem>
-              <SelectItem value="custom">Custom Range</SelectItem>
-            </SelectContent>
-          </Select>
-        </div>
-
-        <div className="flex gap-4 items-center">
-          <div className="flex flex-col space-y-2">
-            <label htmlFor="from-date" className="text-sm font-medium">From</label>
-            <Input
-              id="from-date"
-              type="date"
-              value={formatDateForInput(dateRange.from)}
-              onChange={handleFromDateChange}
-              className="w-[150px]"
-            />
-          </div>
-          <div className="flex flex-col space-y-2">
-            <label htmlFor="to-date" className="text-sm font-medium">To</label>
-            <Input
-              id="to-date"
-              type="date"
-              value={formatDateForInput(dateRange.to)}
-              onChange={handleToDateChange}
-              className="w-[150px]"
-            />
-          </div>
-        </div>
-      </CardContent>
-    </Card>
+    <div className="flex items-center gap-4 p-3 border rounded-lg bg-muted/20">
+      <span className="text-sm font-medium text-muted-foreground">Date Range:</span>
+      <Select value={preset} onValueChange={handlePresetChange}>
+        <SelectTrigger className="w-[110px] h-8 text-sm">
+          <SelectValue placeholder="Select" />
+        </SelectTrigger>
+        <SelectContent>
+          <SelectItem value="last-week">Last Week</SelectItem>
+          <SelectItem value="last-month">Last Month</SelectItem>
+          <SelectItem value="custom">Custom</SelectItem>
+        </SelectContent>
+      </Select>
+      <div className="flex items-center gap-2">
+        <Input
+          id="from-date"
+          type="date"
+          value={formatDateForInput(dateRange.from)}
+          onChange={handleFromDateChange}
+          className="w-[130px] h-8 text-sm"
+        />
+        <span className="text-sm text-muted-foreground">to</span>
+        <Input
+          id="to-date"
+          type="date"
+          value={formatDateForInput(dateRange.to)}
+          onChange={handleToDateChange}
+          className="w-[130px] h-8 text-sm"
+        />
+      </div>
+    </div>
   );
 };
