@@ -41,10 +41,17 @@ function DealersTransactionsPage() {
     updateSearch({ tab });
   };
 
-  const setDateRange = (range: { from: Date; to: Date }) => {
+  const setDateRange = (range: { from?: Date; to?: Date }) => {
     updateSearch({
-      dateFrom: formatDateForUrl(range.from),
-      dateTo: formatDateForUrl(range.to),
+      dateFrom: range.from ? formatDateForUrl(range.from) : undefined,
+      dateTo: range.to ? formatDateForUrl(range.to) : undefined,
+    });
+  };
+
+  const clearDateRange = () => {
+    updateSearch({
+      dateFrom: undefined,
+      dateTo: undefined,
     });
   };
 
@@ -104,6 +111,7 @@ function DealersTransactionsPage() {
       <DateRangeSelector 
         dateRange={dateRange}
         onDateRangeChange={setDateRange}
+        onClearDateRange={clearDateRange}
       />
 
       <div className="flex gap-2">
@@ -129,7 +137,7 @@ function DealersTransactionsPage() {
           <CardContent className="pt-0">
             <TransactionsTable 
               transactions={filteredTransactions} 
-              dateRange={dateRange}
+              dateRange={dateRange.from || dateRange.to ? dateRange : undefined}
               dealerFilter={dealerFilter}
               growerFilter={growerFilter}
               typeFilter={typeFilter}
@@ -147,7 +155,7 @@ function DealersTransactionsPage() {
           <CardContent className="pt-0">
             <DealersTable 
               dealers={dealerSummaries} 
-              dateRange={dateRange}
+              dateRange={dateRange.from || dateRange.to ? dateRange : undefined}
               dealerFilter={dealerFilter}
               onDealerFilterChange={setDealerFilter}
               onDealerClick={handleDealerClick}

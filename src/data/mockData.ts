@@ -145,9 +145,11 @@ export const getLastMonthRange = (): { from: Date; to: Date } => {
 
 export const filterTransactionsByDateRange = (
   transactions: Transaction[],
-  dateRange: { from: Date; to: Date }
+  dateRange: { from?: Date; to?: Date }
 ): Transaction[] => {
-  return transactions.filter(transaction => 
-    transaction.postedAt >= dateRange.from && transaction.postedAt <= dateRange.to
-  );
+  return transactions.filter(transaction => {
+    const afterFrom = !dateRange.from || transaction.postedAt >= dateRange.from;
+    const beforeTo = !dateRange.to || transaction.postedAt <= dateRange.to;
+    return afterFrom && beforeTo;
+  });
 };

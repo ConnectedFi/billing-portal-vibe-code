@@ -9,8 +9,8 @@ export const searchParamsSchema = z.object({
   tab: z.enum(['transactions', 'dealers']).optional().default('transactions'),
   
   // Date range filters
-  dateFrom: z.string().optional().default('2024-01-01'),
-  dateTo: z.string().optional().default('2024-12-31'),
+  dateFrom: z.string().optional(),
+  dateTo: z.string().optional(),
   
   // Transaction filters
   dealerFilter: z.string().optional().default(''),
@@ -25,10 +25,10 @@ export const parseSearchParams = (searchParams: Record<string, unknown>): Search
   return searchParamsSchema.parse(searchParams);
 };
 
-export const createDateRange = (dateFrom: string, dateTo: string) => {
+export const createDateRange = (dateFrom?: string, dateTo?: string) => {
   return {
-    from: new Date(dateFrom),
-    to: new Date(dateTo)
+    from: dateFrom ? new Date(dateFrom) : undefined,
+    to: dateTo ? new Date(dateTo) : undefined
   };
 };
 

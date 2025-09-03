@@ -72,7 +72,7 @@ export const ActiveFilters = ({
   }
 
   // Add date range filter
-  if (dateRange) {
+  if (dateRange && (dateRange.from || dateRange.to)) {
     const formatDate = (date: Date) => {
       return new Intl.DateTimeFormat('en-US', {
         month: 'short',
@@ -81,18 +81,20 @@ export const ActiveFilters = ({
       }).format(date);
     };
 
-    const isDefaultRange = dateRange.from.getFullYear() === 2024 && 
-                          dateRange.to.getFullYear() === 2024 &&
-                          dateRange.from.getMonth() === 0 && 
-                          dateRange.from.getDate() === 1 &&
-                          dateRange.to.getMonth() === 11 &&
-                          dateRange.to.getDate() === 31;
+    let dateRangeValue = '';
+    if (dateRange.from && dateRange.to) {
+      dateRangeValue = `${formatDate(dateRange.from)} - ${formatDate(dateRange.to)}`;
+    } else if (dateRange.from) {
+      dateRangeValue = `From ${formatDate(dateRange.from)}`;
+    } else if (dateRange.to) {
+      dateRangeValue = `Until ${formatDate(dateRange.to)}`;
+    }
 
-    if (!isDefaultRange) {
+    if (dateRangeValue) {
       filters.push({
         key: 'dateRange',
         label: 'Date Range',
-        value: `${formatDate(dateRange.from)} - ${formatDate(dateRange.to)}`,
+        value: dateRangeValue,
         onRemove: onClearDateFilter || (() => {})
       });
     }

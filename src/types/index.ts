@@ -25,8 +25,8 @@ export interface DealerSummary {
 }
 
 export interface DateRange {
-  from: Date;
-  to: Date;
+  from?: Date;
+  to?: Date;
 }
 
 export type DatePreset = 'last-week' | 'last-month' | 'custom';
