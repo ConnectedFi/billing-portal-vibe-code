@@ -40,9 +40,9 @@ function DealersTransactionsPage() {
   }, [filteredTransactions]);
 
   return (
-    <div className="container mx-auto py-6 space-y-6">
+    <div className="container mx-auto py-4 space-y-4">
       <div className="flex justify-between items-center">
-        <h1 className="text-3xl font-bold">Dealers & Transactions</h1>
+        <h1 className="text-xl font-semibold">Dealers & Transactions</h1>
       </div>
 
       <DateRangeSelector 
@@ -67,10 +67,10 @@ function DealersTransactionsPage() {
 
       {activeTab === 'transactions' ? (
         <Card>
-          <CardHeader>
-            <CardTitle>Individual Transactions</CardTitle>
+          <CardHeader className="pb-3">
+            <CardTitle className="text-lg">Individual Transactions</CardTitle>
           </CardHeader>
-          <CardContent>
+          <CardContent className="pt-0">
             <TransactionsTable 
               transactions={filteredTransactions} 
               dateRange={dateRange}
@@ -79,10 +79,10 @@ function DealersTransactionsPage() {
         </Card>
       ) : (
         <Card>
-          <CardHeader>
-            <CardTitle>Dealer Summaries</CardTitle>
+          <CardHeader className="pb-3">
+            <CardTitle className="text-lg">Dealer Summaries</CardTitle>
           </CardHeader>
-          <CardContent>
+          <CardContent className="pt-0">
             <DealersTable 
               dealers={dealerSummaries} 
               dateRange={dateRange}

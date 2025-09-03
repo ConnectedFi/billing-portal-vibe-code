@@ -1,6 +1,4 @@
 import { Badge } from '@/components/ui/badge';
-import { Input } from '@/components/ui/input';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import {
   Table,
   TableBody,
@@ -12,6 +10,7 @@ import {
 import { useMemo, useState } from 'react';
 import type { Transaction, TransactionType } from '../types';
 import { ActiveFilters } from './ActiveFilters';
+import { FilterableTableHead } from './FilterableTableHead';
 
 interface TransactionsTableProps {
   transactions: Transaction[];
@@ -64,42 +63,45 @@ export const TransactionsTable = ({ transactions, dateRange }: TransactionsTable
     );
   };
 
+  const transactionTypeOptions = [
+    { value: 'all', label: 'All Types' },
+    { value: 'product-return', label: 'Product Return' },
+    { value: 'principal-payment', label: 'Principal Payment' },
+    { value: 'principal-and-interest-payment', label: 'Principal & Interest Payment' }
+  ];
+
   return (
     <div className="space-y-4">
-      <div className="flex gap-4 flex-wrap">
-        <Input
-          placeholder="Filter by dealer..."
-          value={dealerFilter}
-          onChange={(e) => setDealerFilter(e.target.value)}
-          className="max-w-xs"
-        />
-        <Input
-          placeholder="Filter by grower..."
-          value={growerFilter}
-          onChange={(e) => setGrowerFilter(e.target.value)}
-          className="max-w-xs"
-        />
-        <Select value={typeFilter} onValueChange={(value: TransactionType | 'all') => setTypeFilter(value)}>
-          <SelectTrigger className="max-w-xs">
-            <SelectValue placeholder="Transaction type" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="all">All Types</SelectItem>
-            <SelectItem value="product-return">Product Return</SelectItem>
-            <SelectItem value="principal-payment">Principal Payment</SelectItem>
-            <SelectItem value="principal-and-interest-payment">Principal & Interest Payment</SelectItem>
-          </SelectContent>
-        </Select>
-      </div>
-
       <div className="rounded-md border">
         <Table>
           <TableHeader>
             <TableRow className="bg-muted/50 hover:bg-muted/50">
-              <TableHead className="font-semibold text-foreground">Dealer Name</TableHead>
-              <TableHead className="font-semibold text-foreground">Grower Name</TableHead>
+              <FilterableTableHead
+                filterType="text"
+                filterValue={dealerFilter}
+                onFilterChange={setDealerFilter}
+                placeholder="Filter dealers..."
+              >
+                Dealer Name
+              </FilterableTableHead>
+              <FilterableTableHead
+                filterType="text"
+                filterValue={growerFilter}
+                onFilterChange={setGrowerFilter}
+                placeholder="Filter growers..."
+              >
+                Grower Name
+              </FilterableTableHead>
               <TableHead className="font-semibold text-foreground">Posted Date</TableHead>
-              <TableHead className="font-semibold text-foreground">Transaction Type</TableHead>
+              <FilterableTableHead
+                filterType="select"
+                filterValue={typeFilter}
+                onFilterChange={(value: string) => setTypeFilter(value as TransactionType | 'all')}
+                selectOptions={transactionTypeOptions}
+                placeholder="Filter types..."
+              >
+                Transaction Type
+              </FilterableTableHead>
               <TableHead className="text-right font-semibold text-foreground">Amount Drawn</TableHead>
               <TableHead className="text-right font-semibold text-foreground">Interest Accrued</TableHead>
               <TableHead className="text-right font-semibold text-foreground">CFI Margin</TableHead>

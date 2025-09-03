@@ -1,4 +1,3 @@
-import { Input } from '@/components/ui/input';
 import {
   Table,
   TableBody,
@@ -10,6 +9,7 @@ import {
 import { useMemo, useState } from 'react';
 import type { DealerSummary } from '../types';
 import { ActiveFilters } from './ActiveFilters';
+import { FilterableTableHead } from './FilterableTableHead';
 
 interface DealersTableProps {
   dealers: DealerSummary[];
@@ -45,20 +45,18 @@ export const DealersTable = ({ dealers, dateRange }: DealersTableProps) => {
 
   return (
     <div className="space-y-4">
-      <div className="flex gap-4 flex-wrap">
-        <Input
-          placeholder="Filter by dealer..."
-          value={dealerFilter}
-          onChange={(e) => setDealerFilter(e.target.value)}
-          className="max-w-xs"
-        />
-      </div>
-
       <div className="rounded-md border">
         <Table>
           <TableHeader>
             <TableRow className="bg-muted/50 hover:bg-muted/50">
-              <TableHead className="font-semibold text-foreground">Dealer Name</TableHead>
+              <FilterableTableHead
+                filterType="text"
+                filterValue={dealerFilter}
+                onFilterChange={setDealerFilter}
+                placeholder="Filter dealers..."
+              >
+                Dealer Name
+              </FilterableTableHead>
               <TableHead className="text-right font-semibold text-foreground">Transaction Count</TableHead>
               <TableHead className="text-right font-semibold text-foreground">Total Amount Drawn</TableHead>
               <TableHead className="text-right font-semibold text-foreground">Total Interest Accrued</TableHead>
