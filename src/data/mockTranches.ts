@@ -1,4 +1,4 @@
-import type { Dealer, Rate, TrancheTerm, TrancheWithDealer } from "../types";
+import type { Dealer, Rate, Tranche, TrancheTerm } from "../types";
 
 // Mock dealers data
 export const mockDealers: Dealer[] = [
@@ -16,53 +16,71 @@ const createDate = (daysFromToday: number): Date => {
 	return date;
 };
 
-// Mock tranche terms
-const mockTrancheTerms: TrancheTerm[] = [
-	{
-		startDate: createDate(-90), // 90 days ago
-		endDate: createDate(180), // 180 days from now
-		onBoardDate: createDate(-85), // 85 days ago
-		retailerRate: { type: "prime-plus", value: 2.5 },
-		growerRate: { type: "fixed", rate: 0.065 }, // 6.5%
-	},
-	{
-		startDate: createDate(-60), // 60 days ago
-		endDate: createDate(210), // 210 days from now
-		onBoardDate: createDate(-55), // 55 days ago
-		retailerRate: { type: "fixed", rate: 0.075 },
-		growerRate: { type: "prime-plus", value: 1.8 },
-	},
-	{
-		startDate: createDate(-30), // 30 days ago
-		endDate: createDate(240), // 240 days from now
-		onBoardDate: createDate(-25), // 25 days ago
-		retailerRate: { type: "prime-plus", value: 3.0 },
-		growerRate: { type: "fixed", rate: 0.055 }, // 5.5%
-	},
-];
+// Helper function to create a tranche term with proper IDs
+const createTrancheTerm = (
+	id: string,
+	trancheId: string,
+	startDays: number,
+	endDays: number,
+	onBoardDays: number,
+	retailerRate: Rate,
+	growerRate: Rate
+): TrancheTerm => ({
+	id,
+	trancheId,
+	startDate: createDate(startDays),
+	endDate: createDate(endDays),
+	onBoardDate: createDate(onBoardDays),
+	retailerRate,
+	growerRate,
+});
 
 // Mock tranches data
-export const mockTranches: TrancheWithDealer[] = [
+export const mockTranches: Tranche[] = [
 	{
 		id: "tranche-1",
 		label: "Spring 2024 - Series A",
 		dealerId: mockDealers[0], // Green Valley Farms
 		description: "Primary funding tranche for spring planting season with competitive rates for established growers.",
-		trancheTerms: [mockTrancheTerms[0]],
+		trancheTerms: [
+			createTrancheTerm(
+				"term-1",
+				"tranche-1",
+				-90, 180, -85,
+				{ type: "prime-plus", value: 2.5 },
+				{ type: "fixed", rate: 0.065 }
+			),
+		],
 	},
 	{
 		id: "tranche-2",
 		label: "Spring 2024 - Series B",
 		dealerId: mockDealers[1], // Harvest Co
 		description: "Secondary tranche offering flexible terms for mid-season expansion and equipment financing.",
-		trancheTerms: [mockTrancheTerms[1]],
+		trancheTerms: [
+			createTrancheTerm(
+				"term-2",
+				"tranche-2",
+				-60, 210, -55,
+				{ type: "fixed", rate: 0.075 },
+				{ type: "prime-plus", value: 1.8 }
+			),
+		],
 	},
 	{
 		id: "tranche-3",
 		label: "Summer 2024 - Growth",
 		dealerId: mockDealers[2], // Sunrise Agriculture
 		description: "Growth-focused tranche targeting emerging agricultural markets with variable rate structures.",
-		trancheTerms: [mockTrancheTerms[2]],
+		trancheTerms: [
+			createTrancheTerm(
+				"term-3",
+				"tranche-3",
+				-30, 240, -25,
+				{ type: "prime-plus", value: 3.0 },
+				{ type: "fixed", rate: 0.055 }
+			),
+		],
 	},
 	{
 		id: "tranche-4",
@@ -70,13 +88,13 @@ export const mockTranches: TrancheWithDealer[] = [
 		dealerId: mockDealers[3], // Prairie Grain Co
 		description: "Premium tier tranche for high-volume dealers with preferential terms and extended payment periods.",
 		trancheTerms: [
-			{
-				startDate: createDate(-45),
-				endDate: createDate(300),
-				onBoardDate: createDate(-40),
-				retailerRate: { type: "prime-plus", value: 1.5 },
-				growerRate: { type: "fixed", rate: 0.045 }, // 4.5%
-			},
+			createTrancheTerm(
+				"term-4",
+				"tranche-4",
+				-45, 300, -40,
+				{ type: "prime-plus", value: 1.5 },
+				{ type: "fixed", rate: 0.045 }
+			),
 		],
 	},
 	{
@@ -85,13 +103,13 @@ export const mockTranches: TrancheWithDealer[] = [
 		dealerId: mockDealers[4], // Mountain View Agri
 		description: "Standard harvest season tranche with balanced terms for seasonal cash flow management.",
 		trancheTerms: [
-			{
-				startDate: createDate(-15),
-				endDate: createDate(150),
-				onBoardDate: createDate(-10),
-				retailerRate: { type: "fixed", rate: 0.08 }, // 8%
-				growerRate: { type: "prime-plus", value: 2.0 },
-			},
+			createTrancheTerm(
+				"term-5",
+				"tranche-5",
+				-15, 150, -10,
+				{ type: "fixed", rate: 0.08 },
+				{ type: "prime-plus", value: 2.0 }
+			),
 		],
 	},
 	{
@@ -100,34 +118,34 @@ export const mockTranches: TrancheWithDealer[] = [
 		dealerId: mockDealers[0], // Green Valley Farms (multiple tranches)
 		description: "Multi-term tranche with staggered payment schedules and varying rate structures for complex financing needs.",
 		trancheTerms: [
-			{
-				startDate: createDate(-120),
-				endDate: createDate(90),
-				onBoardDate: createDate(-115),
-				retailerRate: { type: "fixed", rate: 0.07 },
-				growerRate: { type: "fixed", rate: 0.06 },
-			},
-			{
-				startDate: createDate(-60),
-				endDate: createDate(180),
-				onBoardDate: createDate(-55),
-				retailerRate: { type: "prime-plus", value: 2.25 },
-				growerRate: { type: "prime-plus", value: 1.75 },
-			},
+			createTrancheTerm(
+				"term-6a",
+				"tranche-6",
+				-120, 90, -115,
+				{ type: "fixed", rate: 0.07 },
+				{ type: "fixed", rate: 0.06 }
+			),
+			createTrancheTerm(
+				"term-6b",
+				"tranche-6",
+				-60, 180, -55,
+				{ type: "prime-plus", value: 2.25 },
+				{ type: "prime-plus", value: 1.75 }
+			),
 		],
 	},
 ];
 
 // Utility functions for tranche management
-export const getTranchesByDealer = (dealerId: string): TrancheWithDealer[] => {
+export const getTranchesByDealer = (dealerId: string): Tranche[] => {
 	return mockTranches.filter((tranche) => tranche.dealerId.id === dealerId);
 };
 
-export const getAllTranches = (): TrancheWithDealer[] => {
+export const getAllTranches = (): Tranche[] => {
 	return mockTranches;
 };
 
-export const getTrancheById = (id: string): TrancheWithDealer | undefined => {
+export const getTrancheById = (id: string): Tranche | undefined => {
 	return mockTranches.find((tranche) => tranche.id === id);
 };
 
@@ -140,7 +158,7 @@ export const formatRate = (rate: Rate): string => {
 };
 
 // Helper function to get active tranches (those with current or future terms)
-export const getActiveTranches = (): TrancheWithDealer[] => {
+export const getActiveTranches = (): Tranche[] => {
 	const today = new Date();
 	return mockTranches.filter((tranche) =>
 		tranche.trancheTerms.some((term) => term.endDate >= today),
@@ -148,7 +166,7 @@ export const getActiveTranches = (): TrancheWithDealer[] => {
 };
 
 // Helper function to get tranches by status
-export const getTranchesByStatus = (status: "active" | "expired" | "upcoming"): TrancheWithDealer[] => {
+export const getTranchesByStatus = (status: "active" | "expired" | "upcoming"): Tranche[] => {
 	const today = new Date();
 	
 	return mockTranches.filter((tranche) => {
@@ -169,4 +187,24 @@ export const getTranchesByStatus = (status: "active" | "expired" | "upcoming"): 
 				return false;
 		}
 	});
+};
+
+// Utility functions for tranche terms
+export const getAllTrancheTerms = (): TrancheTerm[] => {
+	return mockTranches.flatMap((tranche) => tranche.trancheTerms);
+};
+
+export const getTrancheTermsByTrancheId = (trancheId: string): TrancheTerm[] => {
+	const tranche = mockTranches.find((t) => t.id === trancheId);
+	return tranche ? tranche.trancheTerms : [];
+};
+
+export const getTrancheTermById = (termId: string): TrancheTerm | undefined => {
+	return getAllTrancheTerms().find((term) => term.id === termId);
+};
+
+// Helper function to get tranche name by ID (for display purposes)
+export const getTrancheNameById = (trancheId: string): string => {
+	const tranche = mockTranches.find((t) => t.id === trancheId);
+	return tranche ? tranche.label : "Unknown Tranche";
 };

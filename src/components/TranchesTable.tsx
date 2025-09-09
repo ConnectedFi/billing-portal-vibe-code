@@ -11,12 +11,12 @@ import {
 } from "@/components/ui/table";
 import { Edit, Eye, MoreHorizontal, Trash2, X } from "lucide-react";
 import { toast } from "sonner";
-import { FilterableTableHead } from "./FilterableTableHead";
 import { formatRate } from "../data/mockTranches";
-import type { TrancheWithDealer } from "../types";
+import type { Tranche } from "../types";
+import { FilterableTableHead } from "./FilterableTableHead";
 
 interface TranchesTableProps {
-	tranches: TrancheWithDealer[];
+	tranches: Tranche[];
 	dealerFilter: string;
 	labelFilter: string;
 	statusFilter: string;
@@ -25,9 +25,10 @@ interface TranchesTableProps {
 	onLabelFilterChange: (filter: string) => void;
 	onStatusFilterChange: (filter: string) => void;
 	onClearFilters: () => void;
-	onEdit?: (tranche: TrancheWithDealer) => void;
-	onView?: (tranche: TrancheWithDealer) => void;
-	onDelete?: (tranche: TrancheWithDealer) => void;
+	onEdit?: (tranche: Tranche) => void;
+	onView?: (tranche: Tranche) => void;
+	onDelete?: (tranche: Tranche) => void;
+	onTermsClick?: (tranche: Tranche) => void;
 }
 
 export const TranchesTable = ({
@@ -43,6 +44,7 @@ export const TranchesTable = ({
 	onEdit,
 	onView,
 	onDelete,
+	onTermsClick,
 }: TranchesTableProps) => {
 	const formatDate = (date: Date) => {
 		return new Intl.DateTimeFormat("en-US", {
@@ -52,7 +54,7 @@ export const TranchesTable = ({
 		}).format(date);
 	};
 
-	const getTrancheStatus = (tranche: TrancheWithDealer): "active" | "expired" | "upcoming" => {
+	const getTrancheStatus = (tranche: Tranche): "active" | "expired" | "upcoming" => {
 		const today = new Date();
 		const hasActiveTerm = tranche.trancheTerms.some(
 			(term) => term.startDate <= today && term.endDate >= today,
@@ -81,7 +83,7 @@ export const TranchesTable = ({
 		return <Badge variant={variants[status]}>{labels[status]}</Badge>;
 	};
 
-	const handleEdit = (tranche: TrancheWithDealer) => {
+	const handleEdit = (tranche: Tranche) => {
 		if (onEdit) {
 			onEdit(tranche);
 		} else {
@@ -89,7 +91,7 @@ export const TranchesTable = ({
 		}
 	};
 
-	const handleView = (tranche: TrancheWithDealer) => {
+	const handleView = (tranche: Tranche) => {
 		if (onView) {
 			onView(tranche);
 		} else {
@@ -97,7 +99,7 @@ export const TranchesTable = ({
 		}
 	};
 
-	const handleDelete = (tranche: TrancheWithDealer) => {
+	const handleDelete = (tranche: Tranche) => {
 		if (onDelete) {
 			onDelete(tranche);
 		} else {
@@ -106,7 +108,7 @@ export const TranchesTable = ({
 	};
 
 	// Get date range for tranche (earliest start to latest end)
-	const getTrancheeDateRange = (tranche: TrancheWithDealer) => {
+	const getTrancheeDateRange = (tranche: Tranche) => {
 		if (tranche.trancheTerms.length === 0) return "No terms";
 		
 		const startDates = tranche.trancheTerms.map(term => term.startDate);
@@ -119,7 +121,7 @@ export const TranchesTable = ({
 	};
 
 	// Get primary rates (from first term for simplicity)
-	const getPrimaryRates = (tranche: TrancheWithDealer) => {
+	const getPrimaryRates = (tranche: Tranche) => {
 		if (tranche.trancheTerms.length === 0) return { retailer: "N/A", grower: "N/A" };
 		
 		const firstTerm = tranche.trancheTerms[0];
@@ -189,7 +191,17 @@ export const TranchesTable = ({
 											{getTrancheeDateRange(tranche)}
 										</TableCell>
 										<TableCell className="text-center">
-											{tranche.trancheTerms.length}
+											{onTermsClick ? (
+												<button
+													type="button"
+													onClick={() => onTermsClick(tranche)}
+													className="text-primary hover:text-primary/80 hover:underline cursor-pointer font-medium"
+												>
+													{tranche.trancheTerms.length}
+												</button>
+											) : (
+												tranche.trancheTerms.length
+											)}
 										</TableCell>
 										<TableCell className="text-sm">{rates.retailer}</TableCell>
 										<TableCell className="text-sm">{rates.grower}</TableCell>

@@ -34,18 +34,21 @@ export interface Dealer {
 	name: string;
 }
 
-export type TrancheWithDealer = {
+export type Tranche = {
 	id: string;
 	label: string;
 	dealerId: Dealer;
 	description: string;
+	// Probably move to Tranche
+	onBoardDate: Date;
 	trancheTerms: TrancheTerm[]
 };
 
 export type TrancheTerm = {
+	id: string;
+	trancheId: string;
 	startDate: Date;
 	endDate: Date;
-	onBoardDate: Date;
 	// use decimal to represent percentage: .67 == 67%
 	retailerRate: Rate;
 	// use decimal to represent percentage: .67 == 67%
