@@ -29,9 +29,42 @@ export interface DateRange {
 	to?: Date;
 }
 
+export interface Dealer {
+	id: string;
+	name: string;
+}
+
+export type TrancheWithDealer = {
+	id: string;
+	label: string;
+	dealerId: Dealer;
+	description: string;
+	trancheTerms: TrancheTerm[]
+};
+
+export type TrancheTerm = {
+	startDate: Date;
+	endDate: Date;
+	onBoardDate: Date;
+	// use decimal to represent percentage: .67 == 67%
+	retailerRate: Rate;
+	// use decimal to represent percentage: .67 == 67%
+	growerRate: Rate;
+};
+
 export type DatePreset =
 	| "none"
 	| "last-week"
 	| "last-month"
 	| "last-year"
 	| "custom";
+
+export type Rate =
+	| {
+			type: "prime-plus";
+			value: number;
+	  }
+	| {
+			type: "fixed";
+			rate: number;
+	  };

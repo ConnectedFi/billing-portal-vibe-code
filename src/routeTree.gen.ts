@@ -11,6 +11,7 @@
 import { createServerRootRoute } from '@tanstack/react-start/server'
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as TranchesRouteImport } from './routes/tranches'
 import { Route as DealersTransactionsRouteImport } from './routes/dealers-transactions'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as DemoTanstackQueryRouteImport } from './routes/demo.tanstack-query'
@@ -21,6 +22,11 @@ import { ServerRoute as ApiDemoNamesServerRouteImport } from './routes/api.demo-
 
 const rootServerRouteImport = createServerRootRoute()
 
+const TranchesRoute = TranchesRouteImport.update({
+  id: '/tranches',
+  path: '/tranches',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const DealersTransactionsRoute = DealersTransactionsRouteImport.update({
   id: '/dealers-transactions',
   path: '/dealers-transactions',
@@ -60,6 +66,7 @@ const ApiDemoNamesServerRoute = ApiDemoNamesServerRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/dealers-transactions': typeof DealersTransactionsRoute
+  '/tranches': typeof TranchesRoute
   '/demo/tanstack-query': typeof DemoTanstackQueryRoute
   '/demo/start/api-request': typeof DemoStartApiRequestRoute
   '/demo/start/server-funcs': typeof DemoStartServerFuncsRoute
@@ -67,6 +74,7 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/dealers-transactions': typeof DealersTransactionsRoute
+  '/tranches': typeof TranchesRoute
   '/demo/tanstack-query': typeof DemoTanstackQueryRoute
   '/demo/start/api-request': typeof DemoStartApiRequestRoute
   '/demo/start/server-funcs': typeof DemoStartServerFuncsRoute
@@ -75,6 +83,7 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/dealers-transactions': typeof DealersTransactionsRoute
+  '/tranches': typeof TranchesRoute
   '/demo/tanstack-query': typeof DemoTanstackQueryRoute
   '/demo/start/api-request': typeof DemoStartApiRequestRoute
   '/demo/start/server-funcs': typeof DemoStartServerFuncsRoute
@@ -84,6 +93,7 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/dealers-transactions'
+    | '/tranches'
     | '/demo/tanstack-query'
     | '/demo/start/api-request'
     | '/demo/start/server-funcs'
@@ -91,6 +101,7 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/dealers-transactions'
+    | '/tranches'
     | '/demo/tanstack-query'
     | '/demo/start/api-request'
     | '/demo/start/server-funcs'
@@ -98,6 +109,7 @@ export interface FileRouteTypes {
     | '__root__'
     | '/'
     | '/dealers-transactions'
+    | '/tranches'
     | '/demo/tanstack-query'
     | '/demo/start/api-request'
     | '/demo/start/server-funcs'
@@ -106,6 +118,7 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   DealersTransactionsRoute: typeof DealersTransactionsRoute
+  TranchesRoute: typeof TranchesRoute
   DemoTanstackQueryRoute: typeof DemoTanstackQueryRoute
   DemoStartApiRequestRoute: typeof DemoStartApiRequestRoute
   DemoStartServerFuncsRoute: typeof DemoStartServerFuncsRoute
@@ -138,6 +151,13 @@ export interface RootServerRouteChildren {
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/tranches': {
+      id: '/tranches'
+      path: '/tranches'
+      fullPath: '/tranches'
+      preLoaderRoute: typeof TranchesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/dealers-transactions': {
       id: '/dealers-transactions'
       path: '/dealers-transactions'
@@ -197,6 +217,7 @@ declare module '@tanstack/react-start/server' {
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   DealersTransactionsRoute: DealersTransactionsRoute,
+  TranchesRoute: TranchesRoute,
   DemoTanstackQueryRoute: DemoTanstackQueryRoute,
   DemoStartApiRequestRoute: DemoStartApiRequestRoute,
   DemoStartServerFuncsRoute: DemoStartServerFuncsRoute,
