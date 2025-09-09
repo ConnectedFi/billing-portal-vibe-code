@@ -32,7 +32,10 @@ export const TableFooterWithAggregates = ({
 				const column = columns.find((col) => col.index === index);
 
 				return (
-					<TableCell key={index} className="relative text-center">
+					<TableCell
+						key={`column-${index}-${column?.id || "empty"}`}
+						className="relative text-center"
+					>
 						{column && (
 							<ColumnAggregateSelector
 								columnId={column.id}
